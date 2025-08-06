@@ -1,6 +1,4 @@
-- I’m Kristiyalno
-- I’m interested in coding and hacking.
-- Discord: kristiyalno Mail: kyassa033@gmail.com
+- No info
 
 <!---
 Kristiyalno/Kristiyalno is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
