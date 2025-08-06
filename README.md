@@ -1,6 +1,2 @@
-- No info
-
-<!---
-Kristiyalno/Kristiyalno is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-You can click the Preview link to take a look at your changes.
---->
+Hi, this is Kristiyalno _(aka Sixels)_ I never really cared about people looking in here so I'm not gonna say much.
+My Discord ID is the same as my displayed name.
