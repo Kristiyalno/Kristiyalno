@@ -2,11 +2,11 @@
 
 <img src="https://capsule-render.vercel.app/api?type=waving&height=120&color=gradient&customColorList=12,16,24&section=header" width="100%" />
 
-<a href="https://git.io/typing-svg">
-  <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&size=22&pause=400&color=8BE9FD&center=true&vCenter=true&width=500&lines=Hi%2C+I'm+Kristiyalno+(aka+Sixels);I+don't+say+much+around+here." alt="Typing SVG" />
-</a>
+### Hi, I'm Kristiyalno _(aka Sixels)_
 
 Discord: `kristiyalno` (same as my display name)
+
+I never really cared about people looking in here so I'm not gonna say much.
 
 </div>
 
@@ -31,6 +31,14 @@ Discord: `kristiyalno` (same as my display name)
 
 <img height="165" src="https://github-readme-stats.vercel.app/api?username=Kristiyalno&show_icons=true&theme=dracula&hide_border=true&bg_color=00000000&hide_rank=true" alt="GitHub stats" />
 <img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Kristiyalno&layout=compact&theme=dracula&hide_border=true&bg_color=00000000" alt="Top languages" />
+
+</div>
+
+<br>
+
+<div align="center">
+
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=Kristiyalno&theme=dracula&hide_border=true&bg_color=00000000&line=8BE9FD" alt="activity graph" width="90%" />
 
 </div>
 
