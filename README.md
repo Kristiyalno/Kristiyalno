@@ -46,6 +46,17 @@ I never really cared about people looking in here so I'm not gonna say much.
 
 <div align="center">
 
+#### Recent Activity
+
+</div>
+
+<!--START_SECTION:activity-->
+<!--END_SECTION:activity-->
+
+<br>
+
+<div align="center">
+
 <img src="https://komarev.com/ghpvc/?username=Kristiyalno&label=Profile+Views&color=8be9fd&style=flat" alt="profile views" />
 
 <br><br>
