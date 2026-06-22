@@ -32,7 +32,6 @@ I never really cared about people looking in here so I'm not gonna say much.
 #### Active Projects
 
 <!--START_SECTION:active-repos-->
-<img src="active-projects.svg" alt="active projects" width="100%"/>
 <!--END_SECTION:active-repos-->
 
 </div>
@@ -51,17 +50,6 @@ I never really cared about people looking in here so I'm not gonna say much.
 <div align="center">
 
 <img src="https://github-readme-activity-graph.vercel.app/graph?username=Kristiyalno&theme=dracula&hide_border=true&bg_color=00000000&line=8BE9FD" alt="activity graph" width="90%" />
-
-</div>
-
-<br>
-
-<div align="center">
-
-#### Recent Activity
-
-<!--START_SECTION:activity-->
-<!--END_SECTION:activity-->
 
 </div>
 

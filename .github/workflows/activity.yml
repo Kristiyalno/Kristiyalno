@@ -8,30 +8,13 @@ on:
     branches: [main]
 
 jobs:
-  update-activity:
-    name: Update recent activity
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: jamesgeorge007/github-activity-readme@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          COMMIT_MSG: "chore: update recent activity"
-          MAX_LINES: 5
-
   update-active-repos:
     name: Update active projects
     runs-on: ubuntu-latest
-    needs: update-activity
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: main
 
       - name: Generate active projects SVG and update README
         env:
@@ -42,6 +25,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md active-projects.svg
+          git add README.md card-0.svg card-1.svg card-2.svg
           git diff --cached --quiet || git commit -m "chore: update active projects"
           git push
