@@ -1,4 +1,4 @@
-import urllib.request, json, re, os
+import urllib.request, json, re, os, math
 
 token = os.environ["GITHUB_TOKEN"]
 username = "Kristiyalno"
@@ -21,30 +21,89 @@ color_sets = [
 ]
 
 card_w = 260
-card_h = 110
+pad_x = 18
+text_w = card_w - pad_x * 2  # 224px usable
 
-def truncate(text, maxlen):
-    return text if len(text) <= maxlen else text[:maxlen - 1] + "\u2026"
+CHAR_W_BOLD_14 = 8.2   # name font
+CHAR_W_NORMAL_11 = 6.3 # desc font
+
+def wrap_text(text, max_px, char_w):
+    words = text.split()
+    lines = []
+    current = ""
+    for word in words:
+        test = (current + " " + word).strip()
+        if len(test) * char_w <= max_px:
+            current = test
+        else:
+            if current:
+                lines.append(current)
+            current = word
+    if current:
+        lines.append(current)
+    return lines
 
 svg_files = []
+max_card_h = 0
 
+card_data = []
 for i, repo in enumerate(repos[:3]):
-    name = truncate(repo["name"], 24)
-    desc = truncate(repo.get("description") or "No description", 80)
+    raw_name = repo["name"]
+    desc = repo.get("description") or "No description"
     pushed = repo["pushed_at"][:10]
     url = repo["html_url"]
     c = color_sets[i]
     begin = str(i * -4) + "s"
 
-    line1 = desc[:38]
-    line2 = desc[38:] if len(desc) > 38 else ""
+    name_lines = wrap_text(raw_name, text_w, CHAR_W_BOLD_14)
+    desc_lines = wrap_text(desc, text_w, CHAR_W_NORMAL_11)
 
-    extra_line = ""
-    if line2:
-        extra_line = (
-            '<text x="18" y="90" '
+    # layout:
+    # 16px top pad
+    # name lines: 20px each
+    # 8px gap
+    # "last push" line: 18px
+    # 6px gap
+    # desc lines: 16px each
+    # 16px bottom pad
+
+    name_block_h = len(name_lines) * 20
+    desc_block_h = len(desc_lines) * 16
+    card_h = 16 + name_block_h + 8 + 18 + 6 + desc_block_h + 16
+
+    card_data.append((raw_name, name_lines, desc_lines, pushed, url, c, begin, card_h))
+    if card_h > max_card_h:
+        max_card_h = card_h
+
+# all cards same height = tallest one
+for i, (raw_name, name_lines, desc_lines, pushed, url, c, begin, _) in enumerate(card_data):
+    card_h = max_card_h
+
+    # build text elements
+    text_els = ""
+    y = 16
+    for line in name_lines:
+        y += 20
+        text_els += (
+            '<text x="' + str(pad_x) + '" y="' + str(y) + '" '
             'font-family="\'Segoe UI\',system-ui,sans-serif" '
-            'font-size="11" fill="#ccc9d0">' + line2 + '</text>'
+            'font-size="14" font-weight="700" fill="#f8f8f2">' + line + '</text>'
+        )
+
+    y += 8 + 18
+    text_els += (
+        '<text x="' + str(pad_x) + '" y="' + str(y) + '" '
+        'font-family="\'Segoe UI\',system-ui,sans-serif" '
+        'font-size="11" fill="#bd93f9" font-weight="500">last push: ' + pushed + '</text>'
+    )
+
+    y += 6
+    for line in desc_lines:
+        y += 16
+        text_els += (
+            '<text x="' + str(pad_x) + '" y="' + str(y) + '" '
+            'font-family="\'Segoe UI\',system-ui,sans-serif" '
+            'font-size="11" fill="#ccc9d0">' + line + '</text>'
         )
 
     svg = (
@@ -65,31 +124,21 @@ for i, repo in enumerate(repos[:3]):
         '</stop>'
         '</linearGradient>'
         '</defs>'
-        '<rect width="' + str(card_w) + '" height="' + str(card_h) + '" rx="14"'
-        ' fill="#0d1117"/>'
-        '<rect width="' + str(card_w) + '" height="' + str(card_h) + '" rx="14"'
-        ' fill="url(#grad)" opacity="0.18"/>'
-        '<rect width="' + str(card_w) + '" height="' + str(card_h) + '" rx="14"'
-        ' fill="none" stroke="url(#grad)" stroke-width="1.5" opacity="0.6"/>'
-        '<text x="18" y="34" font-family="\'Segoe UI\',system-ui,sans-serif"'
-        ' font-size="14" font-weight="700" fill="#f8f8f2">' + name + '</text>'
-        '<text x="18" y="56" font-family="\'Segoe UI\',system-ui,sans-serif"'
-        ' font-size="11" fill="#bd93f9" font-weight="500">last push: ' + pushed + '</text>'
-        '<text x="18" y="76" font-family="\'Segoe UI\',system-ui,sans-serif"'
-        ' font-size="11" fill="#ccc9d0">' + line1 + '</text>'
-        + extra_line +
+        '<rect width="' + str(card_w) + '" height="' + str(card_h) + '" rx="14" fill="#0d1117"/>'
+        '<rect width="' + str(card_w) + '" height="' + str(card_h) + '" rx="14" fill="url(#grad)" opacity="0.18"/>'
+        '<rect width="' + str(card_w) + '" height="' + str(card_h) + '" rx="14" fill="none" stroke="url(#grad)" stroke-width="1.5" opacity="0.6"/>'
+        + text_els +
         '</svg>'
     )
 
     filename = "card-" + str(i) + ".svg"
     with open(filename, "w") as f:
         f.write(svg)
-    svg_files.append((filename, url))
+    svg_files.append((filename, url, card_h))
 
-# Update README active-repos section with 3 linked images side by side
 imgs = "&nbsp;&nbsp;".join(
-    '<a href="' + url + '"><img src="' + fname + '" width="260" height="110"/></a>'
-    for fname, url in svg_files
+    '<a href="' + url + '"><img src="' + fname + '" width="260" height="' + str(h) + '"/></a>'
+    for fname, url, h in svg_files
 )
 block = '<div align="center">\n\n' + imgs + '\n\n</div>'
 
