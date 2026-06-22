@@ -1,13 +1,15 @@
-name: Update README with recent activity
+name: Update README
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # every 30 minutes
-  workflow_dispatch: {}       # lets you trigger it manually from the Actions tab
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+  push:
+    branches: [main]
 
 jobs:
-  build:
-    name: Update this repo's README with recent activity
+  update-activity:
+    name: Update recent activity
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -19,3 +21,68 @@ jobs:
         with:
           COMMIT_MSG: "chore: update recent activity"
           MAX_LINES: 5
+
+  update-active-repos:
+    name: Update active projects
+    runs-on: ubuntu-latest
+    needs: update-activity
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Fetch and inject recently committed repos
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 << 'PYEOF'
+          import urllib.request, json, re, os
+
+          token = os.environ["GITHUB_TOKEN"]
+          username = "Kristiyalno"
+
+          req = urllib.request.Request(
+              f"https://api.github.com/users/{username}/repos?sort=pushed&per_page=3&type=owner",
+              headers={
+                  "Authorization": f"Bearer {token}",
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28",
+              }
+          )
+          with urllib.request.urlopen(req) as resp:
+              repos = json.loads(resp.read())
+
+          lines = []
+          for repo in repos:
+              name = repo["name"]
+              url = repo["html_url"]
+              desc = repo.get("description") or ""
+              pushed = repo["pushed_at"][:10]  # YYYY-MM-DD
+              desc_part = f" — {desc}" if desc else ""
+              lines.append(f"- **[{name}]({url})**{desc_part} _(last commit: {pushed})_")
+
+          block = "\n".join(lines)
+
+          with open("README.md", "r") as f:
+              content = f.read()
+
+          pattern = r"(<!--START_SECTION:active-repos-->).*?(<!--END_SECTION:active-repos-->)"
+          replacement = f"<!--START_SECTION:active-repos-->\n{block}\n<!--END_SECTION:active-repos-->"
+          new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+
+          with open("README.md", "w") as f:
+              f.write(new_content)
+
+          print("Done. Repos injected:")
+          print(block)
+          PYEOF
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git diff --cached --quiet || git commit -m "chore: update active projects"
+          git push
