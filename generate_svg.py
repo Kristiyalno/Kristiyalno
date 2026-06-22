@@ -87,7 +87,7 @@ for i, repo in enumerate(repos[:3]):
     svg_files.append((filename, url))
 
 # Update README active-repos section with 3 linked images side by side
-imgs = "".join(
+imgs = "&nbsp;&nbsp;".join(
     '<a href="' + url + '"><img src="' + fname + '" width="260" height="110"/></a>'
     for fname, url in svg_files
 )
