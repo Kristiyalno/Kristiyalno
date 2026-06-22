@@ -34,9 +34,9 @@ I never really cared about people looking in here so I'm not gonna say much.
 </div>
 
 <!--START_SECTION:active-repos-->
+- **[Gif-Bounce-Animation-Generator](https://github.com/Kristiyalno/Gif-Bounce-Animation-Generator)** — Small Python script to make GIFs bounce back and forth indefinitely (ping pong animation) _(last commit: 2026-06-22)_
+- **[DOT](https://github.com/Kristiyalno/DOT)** — A retro style game about Dots. _(last commit: 2026-06-22)_
 - **[Kristiyalno](https://github.com/Kristiyalno/Kristiyalno)** — Config files for my GitHub profile. _(last commit: 2026-06-22)_
-- **[Unbundler](https://github.com/Kristiyalno/Unbundler)** — GUI tool to extract textures, audio, video, text, and metadata from Unity asset bundles (.bundle/.asset.bundle), with automatic video+audio muxing. _(last commit: 2026-06-21)_
-- **[Unbundler-OLD](https://github.com/Kristiyalno/Unbundler-OLD)** — GUI tool to extract textures, audio, video, text, and metadata from Unity asset bundles (.bundle/.asset.bundle), with automatic video+audio muxing. _(last commit: 2026-06-21)_
 <!--END_SECTION:active-repos-->
 
 <br>
