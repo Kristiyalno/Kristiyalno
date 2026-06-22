@@ -31,13 +31,11 @@ I never really cared about people looking in here so I'm not gonna say much.
 
 #### Active Projects
 
-</div>
-
 <!--START_SECTION:active-repos-->
-- **[Gif-Bounce-Animation-Generator](https://github.com/Kristiyalno/Gif-Bounce-Animation-Generator)** — Small Python script to make GIFs bounce back and forth indefinitely (ping pong animation) _(last commit: 2026-06-22)_
-- **[DOT](https://github.com/Kristiyalno/DOT)** — A retro style game about Dots. _(last commit: 2026-06-22)_
-- **[Kristiyalno](https://github.com/Kristiyalno/Kristiyalno)** — Config files for my GitHub profile. _(last commit: 2026-06-22)_
+<img src="active-projects.svg" alt="active projects" width="100%"/>
 <!--END_SECTION:active-repos-->
+
+</div>
 
 <br>
 
@@ -62,10 +60,10 @@ I never really cared about people looking in here so I'm not gonna say much.
 
 #### Recent Activity
 
-</div>
+<!--START_SECTION:recent-activity-->
+<!--END_SECTION:recent-activity-->
 
-<!--START_SECTION:activity-->
-<!--END_SECTION:activity-->
+</div>
 
 <br>
 
