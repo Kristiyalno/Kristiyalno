@@ -15,13 +15,12 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: Readme-Workflows/recent-activity@v2.0.0
+      - uses: jamesgeorge007/github-activity-readme@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          USERNAME: Kristiyalno
-          MAX_LINES: 5
           COMMIT_MSG: "chore: update recent activity"
+          MAX_LINES: 5
 
   update-active-repos:
     name: Update active projects

@@ -60,8 +60,8 @@ I never really cared about people looking in here so I'm not gonna say much.
 
 #### Recent Activity
 
-<!--START_SECTION:recent-activity-->
-<!--END_SECTION:recent-activity-->
+<!--START_SECTION:activity-->
+<!--END_SECTION:activity-->
 
 </div>
 
