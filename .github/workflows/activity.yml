@@ -15,12 +15,13 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - uses: jamesgeorge007/github-activity-readme@master
+      - uses: Readme-Workflows/recent-activity@v2.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          COMMIT_MSG: "chore: update recent activity"
+          USERNAME: Kristiyalno
           MAX_LINES: 5
+          COMMIT_MSG: "chore: update recent activity"
 
   update-active-repos:
     name: Update active projects
@@ -33,7 +34,7 @@ jobs:
         with:
           ref: main
 
-      - name: Fetch and inject recently committed repos
+      - name: Generate active projects SVG and update README
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -54,35 +55,100 @@ jobs:
           with urllib.request.urlopen(req) as resp:
               repos = json.loads(resp.read())
 
-          lines = []
-          for repo in repos:
-              name = repo["name"]
+          # Colors that cycle slowly — one offset per card so they're out of phase
+          # SVG SMIL animation: hue rotation via animateTransform on a linearGradient
+          # GitHub renders SVG animations in <img> tags from same-repo files
+
+          card_w = 260
+          card_h = 110
+          gap = 16
+          pad = 20
+          total_w = pad * 2 + card_w * 3 + gap * 2
+          total_h = card_h + pad * 2
+
+          # Color pairs (from, mid, to) for each card's gradient animation — slow hue shift
+          color_sets = [
+              ("#7c3aed", "#a855f7", "#6366f1"),  # purple → violet
+              ("#0ea5e9", "#38bdf8", "#6366f1"),  # sky → indigo
+              ("#10b981", "#34d399", "#0ea5e9"),  # emerald → sky
+          ]
+
+          def truncate(text, maxlen):
+              return text if len(text) <= maxlen else text[:maxlen - 1] + "…"
+
+          cards_svg = ""
+          for i, repo in enumerate(repos[:3]):
+              x = pad + i * (card_w + gap)
+              y = pad
+              name = truncate(repo["name"], 24)
+              desc = truncate(repo.get("description") or "No description", 42)
               url = repo["html_url"]
-              desc = repo.get("description") or ""
-              pushed = repo["pushed_at"][:10]  # YYYY-MM-DD
-              desc_part = f" — {desc}" if desc else ""
-              lines.append(f"- **[{name}]({url})**{desc_part} _(last commit: {pushed})_")
+              pushed = repo["pushed_at"][:10]
+              c = color_sets[i]
+              grad_id = f"grad{i}"
+              # offset per card so they animate out of phase
+              begin = f"{i * -4}s"
 
-          block = "\n".join(lines)
+              cards_svg += f"""
+    <defs>
+      <linearGradient id="{grad_id}" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%">
+          <animate attributeName="stop-color"
+            values="{c[0]};{c[1]};{c[2]};{c[1]};{c[0]}"
+            dur="8s" begin="{begin}" repeatCount="indefinite"/>
+        </stop>
+        <stop offset="100%">
+          <animate attributeName="stop-color"
+            values="{c[2]};{c[0]};{c[1]};{c[0]};{c[2]}"
+            dur="8s" begin="{begin}" repeatCount="indefinite"/>
+        </stop>
+      </linearGradient>
+      <clipPath id="clip{i}">
+        <rect x="{x}" y="{y}" width="{card_w}" height="{card_h}" rx="14"/>
+      </clipPath>
+    </defs>
+    <rect x="{x}" y="{y}" width="{card_w}" height="{card_h}" rx="14"
+          fill="url(#{grad_id})" opacity="0.18"/>
+    <rect x="{x}" y="{y}" width="{card_w}" height="{card_h}" rx="14"
+          fill="none" stroke="url(#{grad_id})" stroke-width="1.5" opacity="0.6"/>
+    <text x="{x + 18}" y="{y + 34}" font-family="'Segoe UI',system-ui,sans-serif"
+          font-size="14" font-weight="700" fill="#f8f8f2">{name}</text>
+    <text x="{x + 18}" y="{y + 56}" font-family="'Segoe UI',system-ui,sans-serif"
+          font-size="11" fill="#bd93f9" font-weight="500">last push: {pushed}</text>
+    <text x="{x + 18}" y="{y + 76}" font-family="'Segoe UI',system-ui,sans-serif"
+          font-size="11" fill="#ccc9d0">{desc[:38]}</text>"""
+              if len(desc) > 38:
+                  cards_svg += f"""
+    <text x="{x + 18}" y="{y + 90}" font-family="'Segoe UI',system-ui,sans-serif"
+          font-size="11" fill="#ccc9d0">{desc[38:]}</text>"""
 
+          svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="{total_w}" height="{total_h}" viewBox="0 0 {total_w} {total_h}">
+    <rect width="{total_w}" height="{total_h}" fill="#0d1117" rx="16"/>
+    {cards_svg}
+  </svg>"""
+
+          with open("active-projects.svg", "w") as f:
+              f.write(svg)
+
+          # Update README: replace the active-repos section with an img tag
           with open("README.md", "r") as f:
               content = f.read()
 
+          img_line = f'<img src="active-projects.svg" alt="active projects" width="100%"/>'
           pattern = r"(<!--START_SECTION:active-repos-->).*?(<!--END_SECTION:active-repos-->)"
-          replacement = f"<!--START_SECTION:active-repos-->\n{block}\n<!--END_SECTION:active-repos-->"
+          replacement = f"<!--START_SECTION:active-repos-->\n{img_line}\n<!--END_SECTION:active-repos-->"
           new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
 
           with open("README.md", "w") as f:
               f.write(new_content)
 
-          print("Done. Repos injected:")
-          print(block)
+          print("Done.")
           PYEOF
 
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md
+          git add README.md active-projects.svg
           git diff --cached --quiet || git commit -m "chore: update active projects"
           git push
