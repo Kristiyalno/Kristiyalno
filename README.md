@@ -34,7 +34,7 @@ I never really cared about people looking in here so I'm not gonna say much.
 <!--START_SECTION:active-repos-->
 <div align="center">
 
-<a href="https://github.com/Kristiyalno/Kristiyalno"><img src="card-0.svg" width="260" height="196"/></a>&nbsp;&nbsp;<a href="https://github.com/Kristiyalno/GIF-Forge"><img src="card-1.svg" width="260" height="196"/></a>&nbsp;&nbsp;<a href="https://github.com/Kristiyalno/SAM-Idler"><img src="card-2.svg" width="260" height="196"/></a>
+<a href="https://github.com/Kristiyalno/SAM-Idler"><img src="card-0.svg" width="260" height="196"/></a>&nbsp;&nbsp;<a href="https://github.com/Kristiyalno/Kristiyalno"><img src="card-1.svg" width="260" height="196"/></a>&nbsp;&nbsp;<a href="https://github.com/Kristiyalno/GIF-Forge"><img src="card-2.svg" width="260" height="196"/></a>
 
 </div>
 <!--END_SECTION:active-repos-->
