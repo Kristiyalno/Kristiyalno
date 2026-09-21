@@ -34,7 +34,7 @@ I never really cared about people looking in here so I'm not gonna say much.
 <!--START_SECTION:active-repos-->
 <div align="center">
 
-<a href="https://github.com/Kristiyalno/Steam-Marketplace-Full-Order-List"><img src="card-0.svg" width="260" height="148"/></a>&nbsp;&nbsp;<a href="https://github.com/Kristiyalno/Kristiyalno"><img src="card-1.svg" width="260" height="148"/></a>&nbsp;&nbsp;<a href="https://github.com/Kristiyalno/Discord-Emoji-Downloader"><img src="card-2.svg" width="260" height="148"/></a>
+<a href="https://github.com/Kristiyalno/Kristiyalno"><img src="card-0.svg" width="260" height="148"/></a>&nbsp;&nbsp;<a href="https://github.com/Kristiyalno/Steam-Marketplace-Full-Order-List"><img src="card-1.svg" width="260" height="148"/></a>&nbsp;&nbsp;<a href="https://github.com/Kristiyalno/Discord-Emoji-Downloader"><img src="card-2.svg" width="260" height="148"/></a>
 
 </div>
 <!--END_SECTION:active-repos-->
